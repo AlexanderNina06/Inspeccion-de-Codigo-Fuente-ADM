@@ -28,6 +28,7 @@ import screensframework.DBConnect.DBConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.scene.control.Label;
+import java.sql.PreparedStatement;
 
 public class ProductoController implements Initializable, ControlledScreen {
     
@@ -41,17 +42,23 @@ public class ProductoController implements Initializable, ControlledScreen {
     @FXML private TextField tfNombreProducto;
     @FXML private TextField tfPrecioProducto;
     @FXML private TextField tfBuscarProducto;
+    @SuppressWarnings("rawtypes")
     @FXML private ComboBox cbCategoriaProducto;
+    @SuppressWarnings("rawtypes")
     @FXML private ComboBox cbMarcaProducto;
     @FXML private Label lbCodigoProducto;
     
+    @SuppressWarnings("rawtypes")
     @FXML private TableView tablaProducto;
+    @SuppressWarnings("rawtypes")
     @FXML private TableColumn col;
     private Connection conexion;
     
+    @SuppressWarnings("rawtypes")
     ObservableList<ObservableList> producto;
     
     
+    @SuppressWarnings({ "unused", "unchecked" })
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
@@ -96,10 +103,11 @@ public class ProductoController implements Initializable, ControlledScreen {
         controlador = pantallaPadre;
     }
     
-    public  void cargarDatosTabla() {
-         producto = FXCollections.observableArrayList();
-         
-         try{
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    public void cargarDatosTabla() {
+        producto = FXCollections.observableArrayList();
+        
+        try{
             conexion = DBConnection.connect();
             //SQL FOR SELECTING ALL OF CUSTOMER
             String sql = "SELECT p.idproducto, "
@@ -127,7 +135,7 @@ public class ProductoController implements Initializable, ControlledScreen {
              * TABLE COLUMN ADDED DYNAMICALLY *
              **********************************/
             
-            for (int i = 0; i < rs.getMetaData().getColumnCount(); i++ ) {
+            for (int i = 0; i <= rs.getMetaData().getColumnCount(); i++ ) {
                 final int j = i;
                 col = new TableColumn(titulos[i]);
                 col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>(){                   
@@ -174,11 +182,12 @@ public class ProductoController implements Initializable, ControlledScreen {
             //FINALLY ADDED TO TableView
             tablaProducto.setItems(producto);
             rs.close();
-          }catch(SQLException e){
-              System.out.println("Error "+e);            
-          }
+        }catch(SQLException e){
+            System.out.println("Error "+e);            
+        }
     }
     
+    @SuppressWarnings("unchecked")
     public void cargarProductosText(String valor) {
         
         try {
@@ -249,7 +258,7 @@ public class ProductoController implements Initializable, ControlledScreen {
                                 } else {
                                     cargarProductosText(unDigitos);
                                 }
-                             }
+                            }
                         }
                     }
                 }
@@ -333,14 +342,15 @@ public class ProductoController implements Initializable, ControlledScreen {
         int confirmarEliminar = JOptionPane.showConfirmDialog(null, "Realmente desea eliminar este producto??");
         
         if (confirmarEliminar == 0) {
-            try {
+            try 
+            {
                 conexion = DBConnection.connect();
 
                 String sql = "DELETE FROM producto WHERE idproducto = "+lbCodigoProducto.getText()+"";
 
                 PreparedStatement estado = conexion.prepareStatement(sql);
 
-                estado.executeUpdate();
+                int n = estado.executeUpdate();
 
                 if (n > 0) {
                     tablaProducto.getColumns().clear();
@@ -356,13 +366,14 @@ public class ProductoController implements Initializable, ControlledScreen {
         }
     }
     
+    @SuppressWarnings("unchecked")
     @FXML
     private void buscarProducto(ActionEvent event) {
         
         tablaProducto.getItems().clear();
         try {
             conexion = DBConnection.connect();
-             String sql = "SELECT p.idproducto, "
+            String sql = "SELECT p.idproducto, "
                     + " p.nombre_producto, "
                     + " p.precio, "
                     + " c.nombre_categoria AS nom_categoria, "
@@ -383,7 +394,7 @@ public class ProductoController implements Initializable, ControlledScreen {
                 
                 ObservableList<String> row = FXCollections.observableArrayList();
                 for(int i = 1 ; i <= rs.getMetaData().getColumnCount(); i++){
-                   
+                
                     row.add(rs.getString(i));
                 }
                 producto.addAll(row);

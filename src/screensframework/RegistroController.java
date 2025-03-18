@@ -31,16 +31,18 @@ public class RegistroController implements Initializable, ControlledScreen {
     public TextField tfAddUser;
     public TextField tfAddPass;
     public PasswordField tfConfirmar;
+    @SuppressWarnings("rawtypes")
     public ComboBox cbAddsex;
     private Connection conexion;
     
+    @SuppressWarnings("unchecked")
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ObservableList<String> options = FXCollections.observableArrayList(
                 "Hombre",
                 "Mujer"
                 );
-        cbAddsex.setItems(Options);
+        cbAddsex.setItems(options);
         
         // Escuchador para comprobar si pierdo el foco
         tfAddUser.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -76,7 +78,7 @@ public class RegistroController implements Initializable, ControlledScreen {
                         }
                     }
                 }
-         });
+        });
     }    
 
     @Override
@@ -84,6 +86,7 @@ public class RegistroController implements Initializable, ControlledScreen {
         controlador = pantallaPadre;
     }
     
+    @SuppressWarnings("unchecked")
     @FXML
     private void registroUsuario(ActionEvent event){
         
@@ -121,13 +124,13 @@ public class RegistroController implements Initializable, ControlledScreen {
         if (!validation.validaPassword(tfAddPass.getText(), tfConfirmar.getText())) {
             return;
         }
-       
+    
         //______________________________________________________________
         // PREPARAMOS LA SENTENCIA PARA INSERTAR LOS DATOS
         try {
             conexion = DBConnection.connect();
-            String sql = "INSERT INTO usuario "
-                    + "(nombre, apellido, sexo, email, usuario, pass) "
+            String sql = "INSERT INTO usuarios "
+                    + "(nombre, apellido, sexo, correo, usuario, pass) "
                     + "VALUES (?, ?, ?, ?, ?, ?)";
             
             PreparedStatement estado = conexion.prepareStatement(sql);
@@ -149,18 +152,23 @@ public class RegistroController implements Initializable, ControlledScreen {
             int n = estado.executeUpdate();
             
             if (n > 0) {
-                JOptionPane.showMessageDialog(null, "Fallo el registro");
+                JOptionPane.showMessageDialog(null, "Registro Exitoso.");
             } 
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Falló el registro.");
+            }
             
             estado.close();
             
         } catch (SQLException e) {
             
-            JOptionPane.showMessageDialog(null, "Fallo el registro "+e);
+            JOptionPane.showMessageDialog(null, "Error en la base de datos: " + e.getMessage());
             
         }
     }
     
+    @SuppressWarnings("unchecked")
     @FXML
     private void regresarPrincipal(ActionEvent event) {
         tfAddNombre.setText("");

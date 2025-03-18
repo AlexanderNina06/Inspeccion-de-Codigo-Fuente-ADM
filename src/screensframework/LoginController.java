@@ -36,7 +36,6 @@ public class LoginController implements Initializable, ControlledScreen {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }    
 
     @Override
