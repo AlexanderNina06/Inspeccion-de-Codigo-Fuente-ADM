@@ -104,88 +104,95 @@ public class ProductoController implements Initializable, ControlledScreen {
     }
     
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public void cargarDatosTabla() {
-        producto = FXCollections.observableArrayList();
-        
-        try{
-            conexion = DBConnection.connect();
-            //SQL FOR SELECTING ALL OF CUSTOMER
-            String sql = "SELECT p.idproducto, "
-                    + " p.nombre_producto, "
-                    + " p.precio, "
-                    + " c.nombre_categoria AS nom_categoria, "
-                    + " m.nombre_marca AS nom_marca "
-                    + " FROM producto AS p, "
-                    + " categoria AS c, "
-                    + " marca AS m "
-                    + " WHERE p.idcategoria = c.idcategoria AND "
-                    + " p.idmarca = m.idmarca "
-                    + " ORDER BY p.idproducto DESC";
-            //ResultSet
-            ResultSet rs = conexion.createStatement().executeQuery(sql);
-            // Títulos de las columnas
-            String[] titulos = {
-                    "Codigo",
-                    "Nombre",
-                    "Precio",
-                    "Categoria",
-                    "Marca"
-            };
-            /**********************************
-             * TABLE COLUMN ADDED DYNAMICALLY *
-             **********************************/
-            
-            for (int i = 0; i <= rs.getMetaData().getColumnCount(); i++ ) {
-                final int j = i;
-                col = new TableColumn(titulos[i]);
-                col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>(){                   
-                    public ObservableValue<String> call(CellDataFeatures<ObservableList, String> parametro) {                                                                                             
-                        return new SimpleStringProperty((String)parametro.getValue().get(j));                       
-                    }                   
-                });
-                tablaProducto.getColumns().addAll(col);
-                // Asignamos un tamaño a ls columnnas
-                col.setMinWidth(100);
-                System.out.println("Column ["+i+"] ");
-                // Centrar los datos de la tabla
-                col.setCellFactory(new Callback<TableColumn<String,String>,TableCell<String,String>>(){
-                    @Override
-                    public TableCell<String, String> call(TableColumn<String, String> p) {
-                        TableCell cell = new TableCell(){
-                            @Override
-                            protected void updateItem(Object t, boolean bln) {
-                                if(t != null){
-                                    super.updateItem(t, bln);
-                                    System.out.println(t);
-                                    setText(t.toString());
-                                    setAlignment(Pos.CENTER); //Setting the Alignment
-                                }
-                            }
-                        };
-                        return cell;
-                    }
-                });
-            }
-            /********************************
-             * Cargamos de la base de datos *
-             ********************************/
-            while(rs.next()){
-                //Iterate Row
-                ObservableList<String> row = FXCollections.observableArrayList();
-                for(int i = 1 ; i <= rs.getMetaData().getColumnCount()+1; i++){
-                    //Iterate Column
-                    row.add(rs.getString(i));
+public void cargarDatosTabla() {
+    producto = FXCollections.observableArrayList();
+
+    try {
+        conexion = DBConnection.connect();
+        // SQL FOR SELECTING ALL OF CUSTOMER
+        String sql = "SELECT p.idproducto, "
+                + " p.nombre_producto, "
+                + " p.precio, "
+                + " c.nombre_categoria AS nom_categoria, "
+                + " m.nombre_marca AS nom_marca "
+                + " FROM producto AS p, "
+                + " categoria AS c, "
+                + " marca AS m "
+                + " WHERE p.idcategoria = c.idcategoria AND "
+                + " p.idmarca = m.idmarca "
+                + " ORDER BY p.idproducto DESC";
+
+        // ResultSet
+        ResultSet rs = conexion.createStatement().executeQuery(sql);
+
+        // Títulos de las columnas
+        String[] titulos = {
+                "Codigo",
+                "Nombre",
+                "Precio",
+                "Categoria",
+                "Marca"
+        };
+
+        /**********************************
+         * TABLE COLUMN ADDED DYNAMICALLY *
+         **********************************/
+
+        for (int i = 0; i < rs.getMetaData().getColumnCount(); i++) {
+            final int j = i;
+            col = new TableColumn(titulos[i]);
+            col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+                public ObservableValue<String> call(CellDataFeatures<ObservableList, String> parametro) {
+                    return new SimpleStringProperty((String) parametro.getValue().get(j));
                 }
-                System.out.println("Row [1] added "+row );
-                producto.addAll(row);
-            }
-            //FINALLY ADDED TO TableView
-            tablaProducto.setItems(producto);
-            rs.close();
-        }catch(SQLException e){
-            System.out.println("Error "+e);            
+            });
+
+            tablaProducto.getColumns().addAll(col);
+            col.setMinWidth(100);
+            System.out.println("Column [" + i + "] ");
+
+            // Centrar los datos de la tabla
+            col.setCellFactory(new Callback<TableColumn<String, String>, TableCell<String, String>>() {
+                @Override
+                public TableCell<String, String> call(TableColumn<String, String> p) {
+                    TableCell cell = new TableCell() {
+                        @Override
+                        protected void updateItem(Object t, boolean bln) {
+                            if (t != null) {
+                                super.updateItem(t, bln);
+                                System.out.println(t);
+                                setText(t.toString());
+                                setAlignment(Pos.CENTER); // Setting the Alignment
+                            }
+                        }
+                    };
+                    return cell;
+                }
+            });
         }
+
+        /********************************
+         * Cargamos de la base de datos *
+         ********************************/
+
+        while (rs.next()) {
+            // Iterate Row
+            ObservableList<String> row = FXCollections.observableArrayList();
+            for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
+                // Iterate Column
+                row.add(rs.getString(i));
+            }
+            System.out.println("Row [1] added " + row);
+            producto.addAll(row);
+        }
+
+        // FINALLY ADDED TO TableView
+        tablaProducto.setItems(producto);
+        rs.close();
+    } catch (SQLException e) {
+        System.out.println("Error " + e);
     }
+}
     
     @SuppressWarnings("unchecked")
     public void cargarProductosText(String valor) {
@@ -393,8 +400,7 @@ public class ProductoController implements Initializable, ControlledScreen {
             while(rs.next()){
                 
                 ObservableList<String> row = FXCollections.observableArrayList();
-                for(int i = 1 ; i <= rs.getMetaData().getColumnCount(); i++){
-                
+                for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
                     row.add(rs.getString(i));
                 }
                 producto.addAll(row);
