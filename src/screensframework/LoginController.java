@@ -36,7 +36,6 @@ public class LoginController implements Initializable, ControlledScreen {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
     }    
 
     @Override
@@ -67,14 +66,15 @@ public class LoginController implements Initializable, ControlledScreen {
         /* SE HACE EL LLAMADO AL MODELO PARA ENTRAR AL SISTEMA */
         try {
             conexion = DBConnection.connect();
-            String sql = "SELECT * FROM "
-                    + " usuarios WHERE "
-                    + " usuario = '"+tfUsuario.getText()+"' AND "
-                    + " pass = '"+DigestUtils.sha1Hex(tfPass.getText())+"'";
+        
+            // Obtener los valores de los campos de texto y eliminar espacios en blanco
+            //String usuario = tfUsuario.getText().trim();
+            //String pass = tfPass.getText().trim();
+            String sql = "SELECT * FROM usuarios WHERE usuario = '" + tfUsuario.getText() + "' AND pass = '" + tfPass.getText() + "'";
             ResultSet rs = conexion.createStatement().executeQuery(sql);
-            
+        
             boolean existeUsuario = rs.next();
-            
+        
             if (existeUsuario) {
                 tfUsuario.setText("");
                 tfPass.setText("");
@@ -82,7 +82,7 @@ public class LoginController implements Initializable, ControlledScreen {
             } else {
                 JOptionPane.showMessageDialog(null, "Este usuario no está registrado");
             }
-            
+        
         } catch (SQLException e) {
             System.out.println("Error " + e.getMessage());
         }
