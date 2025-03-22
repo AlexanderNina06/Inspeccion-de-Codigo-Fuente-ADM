@@ -88,7 +88,11 @@
                             <URL value="@../img_css/estilo1.css" />
                           </stylesheets>
                         </Button>
-                        <Hyperlink font="$x2" layoutX="356.0" layoutY="20.0" text="Vista de impresión" textOverrun="ELLIPSIS" />
+                        <Hyperlink layoutX="356.0" layoutY="20.0" text="Vista de impresión" textFill="#0029ff" textOverrun="ELLIPSIS">
+                          <font>
+                            <Font size="11.0" />
+                          </font>
+                        </Hyperlink>
                       </children>
                     </AnchorPane>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="392.0" prefWidth="249.0">

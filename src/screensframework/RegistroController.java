@@ -25,22 +25,61 @@ public class RegistroController implements Initializable, ControlledScreen {
     ScreensController controlador;
     private Validaciones validation = new Validaciones();
     private ControlesBasicos controlesBasicos = new ControlesBasicos();
-    public TextField tfAddNombre;
-    public TextField tfAddApellido;
-    public TextField tfAddCorreo;
-    public TextField tfAddUser;
-    public TextField tfAddPass;
-    public PasswordField tfConfirmar;
+    private TextField tfAddNombre;
+    private TextField tfAddApellido;
+    private TextField tfAddCorreo;
+    private TextField tfAddUser;
+    private TextField tfAddPass;
+    private PasswordField tfConfirmar;
+    public TextField getTfAddNombre() {
+        return tfAddNombre;
+    }
+    public void setTfAddNombre(TextField tfAddNombre) {
+        this.tfAddNombre = tfAddNombre;
+    }
+    public TextField getTfAddApellido() {
+        return tfAddApellido;
+    }
+    public void setTfAddApellido(TextField tfAddApellido) {
+        this.tfAddApellido = tfAddApellido;
+    }
+    public TextField getTfAddCorreo() {
+        return tfAddCorreo;
+    }
+    public void setTfAddCorreo(TextField tfAddCorreo) {
+        this.tfAddCorreo = tfAddCorreo;
+    }
+    public TextField getTfAddUser() {
+        return tfAddUser;
+    }
+    public void setTfAddUser(TextField tfAddUser) {
+        this.tfAddUser = tfAddUser;
+    }
+    public TextField getTfAddPass() {
+        return tfAddPass;
+    }
+    public void setTfAddPass(TextField tfAddPass) {
+        this.tfAddPass = tfAddPass;
+    }
+    public PasswordField getTfConfirmar() {
+        return tfConfirmar;
+    }
+
+    public void setTfConfirmar(PasswordField tfConfirmar) {
+        this.tfConfirmar = tfConfirmar;
+    }
+    @SuppressWarnings("rawtypes")
     public ComboBox cbAddsex;
     private Connection conexion;
     
+    @SuppressWarnings("unchecked")
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         ObservableList<String> options = FXCollections.observableArrayList(
                 "Hombre",
                 "Mujer"
                 );
-        cbAddsex.setItems(Options);
+        cbAddsex.setItems(options);
         
         // Escuchador para comprobar si pierdo el foco
         tfAddUser.focusedProperty().addListener(new ChangeListener<Boolean>() {
@@ -76,7 +115,7 @@ public class RegistroController implements Initializable, ControlledScreen {
                         }
                     }
                 }
-         });
+        });
     }    
 
     @Override
@@ -84,6 +123,7 @@ public class RegistroController implements Initializable, ControlledScreen {
         controlador = pantallaPadre;
     }
     
+    @SuppressWarnings("unchecked")
     @FXML
     private void registroUsuario(ActionEvent event){
         
@@ -121,13 +161,13 @@ public class RegistroController implements Initializable, ControlledScreen {
         if (!validation.validaPassword(tfAddPass.getText(), tfConfirmar.getText())) {
             return;
         }
-       
+    
         //______________________________________________________________
         // PREPARAMOS LA SENTENCIA PARA INSERTAR LOS DATOS
         try {
             conexion = DBConnection.connect();
-            String sql = "INSERT INTO usuario "
-                    + "(nombre, apellido, sexo, email, usuario, pass) "
+            String sql = "INSERT INTO usuarios "
+                    + "(nombre, apellido, sexo, correo, usuario, pass) "
                     + "VALUES (?, ?, ?, ?, ?, ?)";
             
             PreparedStatement estado = conexion.prepareStatement(sql);
@@ -136,7 +176,7 @@ public class RegistroController implements Initializable, ControlledScreen {
             estado.setString(3, cbAddsex.getValue().toString());
             estado.setString(4, tfAddCorreo.getText());
             estado.setString(5, tfAddUser.getText());
-            estado.setString(6, DigestUtils.sha1Hex(tfAddPass.getText()));
+            estado.setString(6, tfAddPass.getText());
             
             tfAddNombre.setText("");
             tfAddApellido.setText("");
@@ -149,18 +189,23 @@ public class RegistroController implements Initializable, ControlledScreen {
             int n = estado.executeUpdate();
             
             if (n > 0) {
-                JOptionPane.showMessageDialog(null, "Fallo el registro");
+                JOptionPane.showMessageDialog(null, "Registro Exitoso.");
             } 
+            else
+            {
+                JOptionPane.showMessageDialog(null, "Falló el registro.");
+            }
             
             estado.close();
             
         } catch (SQLException e) {
             
-            JOptionPane.showMessageDialog(null, "Fallo el registro "+e);
+            JOptionPane.showMessageDialog(null, "Error en la base de datos: " + e.getMessage());
             
         }
     }
     
+    @SuppressWarnings("unchecked")
     @FXML
     private void regresarPrincipal(ActionEvent event) {
         tfAddNombre.setText("");
