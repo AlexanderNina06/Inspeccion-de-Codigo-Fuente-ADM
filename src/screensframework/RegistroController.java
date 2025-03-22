@@ -25,12 +25,49 @@ public class RegistroController implements Initializable, ControlledScreen {
     ScreensController controlador;
     private Validaciones validation = new Validaciones();
     private ControlesBasicos controlesBasicos = new ControlesBasicos();
-    public TextField tfAddNombre;
-    public TextField tfAddApellido;
-    public TextField tfAddCorreo;
-    public TextField tfAddUser;
-    public TextField tfAddPass;
-    public PasswordField tfConfirmar;
+    private TextField tfAddNombre;
+    private TextField tfAddApellido;
+    private TextField tfAddCorreo;
+    private TextField tfAddUser;
+    private TextField tfAddPass;
+    private PasswordField tfConfirmar;
+    public TextField getTfAddNombre() {
+        return tfAddNombre;
+    }
+    public void setTfAddNombre(TextField tfAddNombre) {
+        this.tfAddNombre = tfAddNombre;
+    }
+    public TextField getTfAddApellido() {
+        return tfAddApellido;
+    }
+    public void setTfAddApellido(TextField tfAddApellido) {
+        this.tfAddApellido = tfAddApellido;
+    }
+    public TextField getTfAddCorreo() {
+        return tfAddCorreo;
+    }
+    public void setTfAddCorreo(TextField tfAddCorreo) {
+        this.tfAddCorreo = tfAddCorreo;
+    }
+    public TextField getTfAddUser() {
+        return tfAddUser;
+    }
+    public void setTfAddUser(TextField tfAddUser) {
+        this.tfAddUser = tfAddUser;
+    }
+    public TextField getTfAddPass() {
+        return tfAddPass;
+    }
+    public void setTfAddPass(TextField tfAddPass) {
+        this.tfAddPass = tfAddPass;
+    }
+    public PasswordField getTfConfirmar() {
+        return tfConfirmar;
+    }
+
+    public void setTfConfirmar(PasswordField tfConfirmar) {
+        this.tfConfirmar = tfConfirmar;
+    }
     @SuppressWarnings("rawtypes")
     public ComboBox cbAddsex;
     private Connection conexion;
@@ -139,7 +176,7 @@ public class RegistroController implements Initializable, ControlledScreen {
             estado.setString(3, cbAddsex.getValue().toString());
             estado.setString(4, tfAddCorreo.getText());
             estado.setString(5, tfAddUser.getText());
-            estado.setString(6, DigestUtils.sha1Hex(tfAddPass.getText()));
+            estado.setString(6, tfAddPass.getText());
             
             tfAddNombre.setText("");
             tfAddApellido.setText("");
